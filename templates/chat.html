@@ -1,0 +1,111 @@
+<html>
+<head>
+<title>Web_Chatting</title>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript"
+src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
+<style>
+body * { color:#333; padding:5px; font-size:15px;}
+.body {
+//	background-color:#e0ffff;
+	width:900px;
+	margin:0px auto;
+	padding:5px 0px;
+}	
+h2 {
+	text-align:center;
+	color:#337ab7;
+	font-size:25px;
+}
+#chat {
+	width:585px;
+	height:350px;
+	border:1px solid #ddd;
+	float:left;
+	overflow:scroll;
+}
+#user_list {
+	width:275px;
+        height:350px;
+        border:1px solid #ddd;
+	background-color:#2f4f4f;
+	float:right;
+	color:#fff8dc;
+}
+#chat_box:after {
+	content:"";	
+	clear:both;
+	display:block;
+}
+#nickname {
+	padding:5px 5px 1px 5px;
+	margin:5px 0px 1px 0px;
+}
+#msg {
+	width:100%;
+	height:40px;
+	color:#008b8b;
+	font-size:15px;
+}
+
+div {//
+	border:1px solid blue;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+	var ws_url = "http://" + document.domain + ":" + location.port;
+	socket = io.connect(ws_url);
+	//console.log(socket);
+	socket.on('connect',function(nick) {
+		//socket.send('connection')
+	});
+	socket.on('message',function(msg) {
+		$("#chat").append("<p>" + msg + "</p>"); 
+		$('#chat').scrollTop($('#chat').prop("scrollHeight"));
+	});
+	socket.on('msg', function(msg) {
+//		console.log('AAAAAAAAAA');
+		$("#chat").append("<p>" + msg + "</p>"); 
+		$('#chat').scrollTop($('#chat').prop("scrollHeight"));
+	});
+
+	$("#msg").keyup(function(e) {
+		if (e.keyCode != 13) return false;
+		socket.emit('msg', $(this).val());
+		$(this).val('');
+	});
+
+	console.log("ready");
+});
+
+function msg_send(e) {
+	if (e.keyCode == '13') {
+		//socket.send($('#msg').val())
+		socket.emit('msg', $('#msg').val())
+		$('#msg').val("");
+	}
+}
+</script>
+
+</head>
+<body>
+	<div class='header'></div>
+	<div class='body'>
+		<h2>웹 채팅 by Han</h2>
+		<div id='chat_box'>
+			<div id='chat'></div>
+			<div id='user_list'>사용자목록</div>
+		</div>
+		<div id='nickname'>{{ nick }}</div>
+		<div id='msg_box'>
+			<input type='text' id='msg' />
+			<!--input type='text' id='msg' onkeypress='msg_send(event)'/-->
+		</div>
+	</div>
+	<div class='footer'></div>
+</body>
+</html>

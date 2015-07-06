@@ -1,0 +1,25 @@
+<html>
+<head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript"
+src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
+<title>ws_test</title>
+
+<script>
+$(document).ready(function() {
+	var ws_url = "http://" + document.domain + ":" + location.port;
+	socket = io.connect(ws_url);
+	socket.on('message',function(msg) {
+		$("#console").append("<p>" + msg + "</p>");
+	});
+	socket.send('sdi');
+});
+</script>
+</head>
+
+<body>
+	<h1>WebSocket Example</h1>
+	<div id="console"></div>
+</body>
+</html>
