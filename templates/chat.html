@@ -68,8 +68,7 @@ $(document).ready(function() {
 		$('#chat').scrollTop($('#chat').prop("scrollHeight"));
 	});
 	socket.on('msg', function(msg) {
-//		console.log('AAAAAAAAAA');
-		$("#chat").append("<p>" + msg + "</p>"); 
+		$("#chat").append("<p>{{ nick }} : " + msg + "</p>"); 
 		$('#chat').scrollTop($('#chat').prop("scrollHeight"));
 	});
 
@@ -85,7 +84,9 @@ $(document).ready(function() {
 function msg_send(e) {
 	if (e.keyCode == '13') {
 		//socket.send($('#msg').val())
-		socket.emit('msg', $('#msg').val())
+		msg = $("#nickname").text() + " : " + $('#msg').val();
+		console.debug(msg);
+		socket.emit('msg', msg);//$('#msg').val());
 		$('#msg').val("");
 	}
 }
